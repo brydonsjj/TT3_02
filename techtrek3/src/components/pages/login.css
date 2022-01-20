@@ -1,0 +1,37 @@
+
+.title {
+    position: absolute;
+    top: 10%;
+    color: #004685;
+    font-size: 50px;
+}
+
+.loginPage {
+    min-height: 110vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E5E5E5;
+}
+
+.form {
+    width: fit-content;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 3%;
+    padding: 100px;
+  }
+
+#standard-required {
+    margin-bottom: 5px;
+    width: 500px;
+}
+
+.form .form__custom-button {
+    margin-top: 50px;
+    width: 500px;
+    color:#004685;
+  }
