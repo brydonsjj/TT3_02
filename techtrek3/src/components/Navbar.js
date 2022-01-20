@@ -17,8 +17,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import Post from './Post';
+import { Outlet, Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -144,6 +144,7 @@ const Navbar = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
+          <Outlet />
             <Post />
       </Box>
     </Box>
