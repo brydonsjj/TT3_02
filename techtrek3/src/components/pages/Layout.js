@@ -17,8 +17,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Post from './Post';
+import Post from '../Post';
 import { Outlet, Link } from "react-router-dom";
+import Button from '@mui/material/Button';
 
 const drawerWidth = 240;
 
@@ -119,6 +120,7 @@ const Layout = () => {
           <Typography variant="h6" noWrap component="div">
             TechTrek3
           </Typography>
+          <Button> Login </Button>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
