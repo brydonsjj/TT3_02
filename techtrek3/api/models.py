@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
+
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__ = 'users'
 
     user_id = db.Column(db.Integer, primary_key=True)
@@ -26,13 +26,12 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(40), nullable=False, unique=False)
     country = db.Column(db.String(40), nullable=False, unique=False)
     hashed_password = db.Column(db.String(255), nullable=False)
-    is_admin = db.Column(db.Boolean, nullable=False)
 
-    posts = db.relationship('Post', backref='user', lazy=True)
-    comments = db.relationship('Comment', backref='user', lazy=True)
-    likes = db.relationship('Post', secondary=likedposts,
-                            backref = db.backref('users', lazy='dynamic'),
-                            lazy='dynamic')
+    # posts = db.relationship('Post', backref='user', lazy=True)
+    # comments = db.relationship('Comment', backref='user', lazy=True)
+    # likes = db.relationship('Post', secondary=likedposts,
+    #                         backref = db.backref('users', lazy='dynamic'),
+    #                         lazy='dynamic')
 
 
     @property
@@ -46,24 +45,23 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'age' : self.age,
-            'birthday': self.birthday,
-            'email': self.email,
-            'city': self.city,
-            'country': self.country,
-            'hashed_password' : self.hashed_pasword,
-            'is_admin': self.is_admin,
-        }
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'name': self.name,
+    #         'age' : self.age,
+    #         'birthday': self.birthday,
+    #         'email': self.email,
+    #         'city': self.city,
+    #         'country': self.country,
+    #         'hashed_password' : self.hashed_pasword
+    #     }
 
     def json(self):
         return {"user_ID": self.user_ID, "name": self.name, "age": self.age, "birthday": self.birthday,
                 "email": self.email, "phone": self.phone, "city": self.city, "country": self.city}
 
-class Post(db.Model, UserMixin):
+class Post(db.Model):
     __tablename__ = 'post'
 
     post_id = db.Column(db.Integer, primary_key=True)
@@ -71,7 +69,7 @@ class Post(db.Model, UserMixin):
     post_description = db.Column(db.String(40), nullable=True, unique=False)
     post_image = db.Column(db.String(255), nullable=True, unique=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable = False)
-    comments = db.relationship('Comment', backref='post', lazy=True)
+    
 
     def to_dict(self):
         return {
@@ -79,9 +77,12 @@ class Post(db.Model, UserMixin):
             'post_title': self.post_title,
             'post_description': self.post_description,
             'post_image': self.post_image,
-            'user_id': self.user_id,
-            'comments': self.comments
+            'user_id': self.user_id
         }
+
+    def json(self):
+        return {"post": self.user_ID, "name": self.name, "age": self.age, "birthday": self.birthday,
+                "email": self.email, "phone": self.phone, "city": self.city, "country": self.city}
 
 
 class LikedPost(db.Model):
