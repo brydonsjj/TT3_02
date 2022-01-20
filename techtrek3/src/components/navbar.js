@@ -18,6 +18,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
+import Post from './Post';
 
 const drawerWidth = 240;
 
@@ -143,12 +144,7 @@ const MiniDrawer = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography paragraph>
-          Post 1
-        </Typography>
-        <Typography paragraph>
-          Post 2
-        </Typography>
+            <Post />
       </Box>
     </Box>
   );
