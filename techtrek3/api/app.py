@@ -123,6 +123,10 @@ def post():
 		return post_dict
 
 
+@app.route('/', methods=['GET'])
+def get_all_users():
+    return jsonify({"users": [user.json() for user in User.query.all()]})
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host = '0.0.0.0',port=5010, debug=True)

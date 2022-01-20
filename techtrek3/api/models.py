@@ -3,7 +3,16 @@ from flask_login import UserMixin
 
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/socialmedia'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+CORS(app)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -49,6 +58,10 @@ class User(db.Model, UserMixin):
             'hashed_password' : self.hashed_pasword,
             'is_admin': self.is_admin,
         }
+
+    def json(self):
+        return {"user_ID": self.user_ID, "name": self.name, "age": self.age, "birthday": self.birthday,
+                "email": self.email, "phone": self.phone, "city": self.city, "country": self.city}
 
 class Post(db.Model, UserMixin):
     __tablename__ = 'post'
