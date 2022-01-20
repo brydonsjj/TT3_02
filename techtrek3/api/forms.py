@@ -46,3 +46,8 @@ class LoginForm(FlaskForm):
 class PostForm(Form):
     title = TextAreaField("Post Title", validators=[DataRequired()])
 	content = TextAreaField("Post Desc", validators = [DataRequired()])
+    post_image = TextAreaField("Post Image", validators = [DataRequired()])
+
+class CommentForm(FlaskForm):
+
+
