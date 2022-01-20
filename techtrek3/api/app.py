@@ -5,9 +5,8 @@ from flask_bcrypt import check_password_hash
 from flask_login import (LoginManager, login_user, logout_user,
 							login_required, current_user)
 
-from user import User
-from signup_form import SignUpForm
-from login_form import LoginForm
+import models
+import forms
 
 app = Flask(__name__)
 app.debug = True
@@ -60,9 +59,9 @@ def authenticate():
 @auth_routes.route('/signup', methods=['POST'])
 def sign_up():
     #Creates a new user and logs them in
-	form = SignUpForm()
+	form = forms.SignUpForm()
 	if form.validate_on_submit():
-        user = User(
+        user = models.User(
             username=form.data['username'],
             email=form.data['email'],
             password=form.data['password']
@@ -76,9 +75,9 @@ def sign_up():
 
 @app.route('/login', methods = ('GET', 'POST'))
 def login():
-	form = LoginForm()
+	form = forms.LoginForm()
 	if form.validate_on_submit():
-		user = User.query.filter(User.email == form.data['email']).first()
+		user = models.User.query.filter(User.email == form.data['email']).first()
 		login_user(user)
 		return user.to_dict()
 	return {'errors': validation_errors_to_error_messages(form.errors)}, 401
@@ -98,6 +97,30 @@ def unauthorized():
     return {'errors': ['Unauthorized']}, 401
 
 
+@app.route('/new_post', methods = 'POST')
+@login_required
+def post():
+	form = forms.PostForm()
+	if form.validate_on_submit():
+
+        post = models.Post(
+        post_title=form.data['Post Title'],
+        post_description=form.content.data.strip() #form.data['Post Desc']
+        )
+        db.session.add(post)
+        db.session.commit()
+
+        post_dict = post.to_dict()
+
+
+        post = models.LikedPost(
+            user_id=g.user.id,
+            post_id= post_dict['post_id']
+        )
+        db.session.add(post)
+        db.session.commit()
+
+		return post_dict
 
 
 
