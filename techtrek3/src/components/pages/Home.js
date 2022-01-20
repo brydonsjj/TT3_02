@@ -20,7 +20,7 @@ const Posts = () => {
     }, []);
 
     return (
-        <Grid container justifyContent="center" alignItems="center">
+        <Grid backgroundColor="#F5F7FB" container justifyContent="center" alignItems="center">
             <Grid item>
                 {posts.map((post, index) => (
                     <Post key={index} post={post} />
