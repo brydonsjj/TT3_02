@@ -17,8 +17,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
-import Post from './Post';
+import Post from '../Post';
+import { Outlet, Link } from "react-router-dom";
+import Button from '@mui/material/Button';
 
 const drawerWidth = 240;
 
@@ -87,7 +88,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const Navbar = () => {
+const Layout = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -119,6 +120,7 @@ const Navbar = () => {
           <Typography variant="h6" noWrap component="div">
             TechTrek3
           </Typography>
+          <Button> Login </Button>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -144,10 +146,11 @@ const Navbar = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
+          <Outlet />
             <Post />
       </Box>
     </Box>
   );
 }
 
-export default Navbar
+export default Layout
