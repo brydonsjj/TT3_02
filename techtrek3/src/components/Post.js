@@ -7,27 +7,28 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-const Post = () => {
-  return (
-    <div>
+const Post = ({ post }) => {
+  return ( 
+    <Box m={2}>
         <Card sx={{ maxWidth: 450 }}>
             <CardContent>
                 <Typography variant="h5" component="div">
-                    Post Title
+                    {post.Post_Title}
                 </Typography>
                 <Typography variant="body1">
-                    Post Description
+                    {post.Post_Description}
                 </Typography>
-                <CardMedia>
-                Post Picture
-                </CardMedia>
+                { post.Post_image.includes("gif") ? 
+                    <CardMedia image={post.Post_image} component="video" alt="Video" /> :
+                    <CardMedia image={post.Post_image} component="img" alt="Image" />
+                }
             </CardContent>
             <CardActions>
                 <Button size="medium">Edit</Button>
                 <Button size="medium" variant="contained">Delete</Button>
             </CardActions>
         </Card>
-    </div>
+    </Box>
   )
 };
 

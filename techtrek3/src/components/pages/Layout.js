@@ -17,7 +17,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Post from '../Post';
+import Posts from '../Posts';
 import { Outlet, Link } from "react-router-dom";
 import Button from '@mui/material/Button';
 
@@ -147,7 +147,7 @@ const Layout = () => {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
           <Outlet />
-            <Post />
+            <Posts />
       </Box>
     </Box>
   );
