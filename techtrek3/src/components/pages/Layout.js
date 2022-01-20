@@ -17,9 +17,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Posts from '../Posts';
 import { Outlet, Link } from "react-router-dom";
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import { useParams, useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -89,6 +90,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const Layout = () => {
+  let navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -105,22 +107,39 @@ const Layout = () => {
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: '36px',
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            TechTrek3
-          </Typography>
-          <Button> Login </Button>
+          <Grid container>
+            <Grid item xs={1}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{
+                  marginRight: '36px',
+                  ...(open && { display: 'none' }),
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={10}>
+              <Typography variant="h6" noWrap component="div">
+                TechTrek3
+              </Typography>
+            </Grid>
+            <Grid item xs ={1}>
+              <Grid container justifyContent="flex-end">
+                <Button
+                    sx={{width: "100%", color: 'white', display: 'block' }}
+                    onClick={() => {
+                      navigate("/login");
+                    }}
+                >
+                  Login
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -135,7 +154,12 @@ const Layout = () => {
         <Divider />
         <List>
           {['Home', 'My Posts'].map((text, index) => (
-            <ListItem button key={text}>
+            <ListItem
+                button key={text}
+                onClick={() => {
+                      navigate(index % 2 === 0 ? "" : "myposts/");
+                }}
+            >
               <ListItemIcon>
                 {index % 2 === 0 ? <HomeIcon /> : <AccountCircleIcon />}
               </ListItemIcon>
@@ -147,7 +171,6 @@ const Layout = () => {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
           <Outlet />
-            <Posts />
       </Box>
     </Box>
   );
