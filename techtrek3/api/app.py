@@ -105,22 +105,15 @@ def post():
 
         post = models.Post(
         post_title=form.data['Post Title'],
-        post_description=form.content.data.strip() #form.data['Post Desc']
+        post_description=form.data['Post Desc'],
+        post_image = form.data['post_image'],
+        user_id= g.user.id
         )
         db.session.add(post)
         db.session.commit()
 
-        post_dict = post.to_dict()
+		return post.json()
 
-
-        post = models.LikedPost(
-            user_id=g.user.id,
-            post_id= post_dict['post_id']
-        )
-        db.session.add(post)
-        db.session.commit()
-
-		return post_dict
 
 
 @app.route('/', methods=['GET'])
