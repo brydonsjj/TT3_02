@@ -1,18 +1,14 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask_login import (login_user, logout_user,
                      login_required)
 import models
 import forms
-from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/socialmedia'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-CORS(app)
 
 db = SQLAlchemy(app)
 CORS(app)

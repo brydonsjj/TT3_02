@@ -1,3 +1,4 @@
+from attr import has
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask import Flask, request, jsonify
@@ -12,16 +13,17 @@ db = SQLAlchemy(app)
 CORS(app)
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     user_id = db.Column(db.Integer, primary_key=True)   
     name = db.Column(db.String(40), nullable=False, unique=True)
     age = db.Column(db.DateTime, nullable=False, unique=False)
     birthday = db.Column(db.String(40), nullable=False, unique=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
+    phone = db.Column(db.String(40), nullable=False, unique=False)
     city = db.Column(db.String(40), nullable=False, unique=False)
     country = db.Column(db.String(40), nullable=False, unique=False)
-    hashed_password = db.Column(db.String(255), nullable=False)
+    hashed_password = db.Column(db.String(255), nullable=True)
 
     # posts = db.relationship('Post', backref='user', lazy=True)
     # comments = db.relationship('Comment', backref='user', lazy=True)
@@ -30,16 +32,26 @@ class User(db.Model):
     #                         lazy='dynamic')
 
 
-    @property
-    def password(self):
-        return self.hashed_password
+    # @property
+    # def password(self):
+    #     return self.hashed_password
 
-    @password.setter
-    def password(self, password):
-        self.hashed_password = generate_password_hash(password)
+    # @password.setter
+    # def password(self, password):
+    #     self.hashed_password = generate_password_hash(password)
 
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
+    # def check_password(self, password):
+    #     return check_password_hash(self.password, password)
+    def __init__(self, user_id, name, age, birthday, email, phone, city, country, hashed_password):
+        self.user_id = user_id
+        self.name = name
+        self.age = age
+        self.birthday = birthday
+        self.email = email
+        self.phone = phone
+        self.city = city
+        self.country = country
+        self.hashed_password = hashed_password
 
     # def to_dict(self):
     #     return {
@@ -54,8 +66,8 @@ class User(db.Model):
     #     }
 
     def json(self):
-        return {"user_ID": self.user_ID, "name": self.name, "age": self.age, "birthday": self.birthday,
-                "email": self.email, "phone": self.phone, "city": self.city, "country": self.city}
+        return {"user_ID": self.user_id, "name": self.name, "age": self.age, "birthday": self.birthday,
+                "email": self.email, "phone": self.phone, "city": self.city, "country": self.country, "hashed_password": self.hashed_password}
 
 class Post(db.Model):
     __tablename__ = 'post'
@@ -93,7 +105,7 @@ class LikedPost(db.Model):
 
 
 class Comment(db.Model):
-    __tablename__ = 'comment'
+    __tablename__ = 'post_comment'
 
     comment_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable = False)
