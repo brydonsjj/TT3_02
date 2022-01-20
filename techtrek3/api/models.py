@@ -1,8 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-from flask_sqlalchemy import SQLAlchemy
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -17,8 +14,7 @@ CORS(app)
 class User(db.Model):
     __tablename__ = 'users'
 
-    user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(40), nullable=False, unique=True,)
+    user_id = db.Column(db.Integer, primary_key=True)   
     name = db.Column(db.String(40), nullable=False, unique=True)
     age = db.Column(db.DateTime, nullable=False, unique=False)
     birthday = db.Column(db.String(40), nullable=False, unique=False)
@@ -71,18 +67,18 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable = False)
     
 
-    def to_dict(self):
-        return {
-            'post_id': self.post_id,
-            'post_title': self.post_title,
-            'post_description': self.post_description,
-            'post_image': self.post_image,
-            'user_id': self.user_id
-        }
+    # def to_dict(self):
+    #     return {
+    #         'post_id': self.post_id,
+    #         'post_title': self.post_title,
+    #         'post_description': self.post_description,
+    #         'post_image': self.post_image,
+    #         'user_id': self.user_id
+    #     }
 
     def json(self):
-        return {"post": self.user_ID, "name": self.name, "age": self.age, "birthday": self.birthday,
-                "email": self.email, "phone": self.phone, "city": self.city, "country": self.city}
+        return {"post_id": self.post_id, "post_title": self.post_title, "post_description": self.post_description, "post_image": self.post_image,
+                "user_id": self.user_id}
 
 
 class LikedPost(db.Model):
@@ -91,9 +87,12 @@ class LikedPost(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'), primary_key=True ,nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.post_id'), primary_key=True,nullable=False)
 
+    def json(self):
+        return {"post_id": self.post_id, "user_id": self.user_id}
 
 
-class Comment(db.Model, UserMixin):
+
+class Comment(db.Model):
     __tablename__ = 'comment'
 
     comment_id = db.Column(db.Integer, primary_key=True)
@@ -101,10 +100,13 @@ class Comment(db.Model, UserMixin):
     post_id = db.Column(db.Integer, db.ForeignKey('post.post_id'), nullable = False)
     comment = db.Column(db.String(255), nullable=False, unique=False)
 
-    def to_dict(self):
-        return {
-            'comment_id': self.comment_id,
-            'post_id': self.post_id,
-            'user_id': self.user_id,
-            'comment': self.comment
-        }
+    # def to_dict(self):
+    #     return {
+    #         'comment_id': self.comment_id,
+    #         'post_id': self.post_id,
+    #         'user_id': self.user_id,
+    #         'comment': self.comment
+    #     }
+
+    def json(self):
+        return {"comment_id": self.comment_id, "post_id": self.post_id, "user_id": self.user_id, "comment": self.comment}

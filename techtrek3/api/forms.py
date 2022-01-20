@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired, Email, ValidationError
-from user import User
-
+from models import User
 
 
 def user_exists(form, field):
@@ -40,14 +39,13 @@ class SignUpForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[DataRequired(), user_exists])
     password = StringField('password', validators=[
-                           DataRequired(), password_matches])
+                            DataRequired(), password_matches])
 
-
-class PostForm(Form):
+class PostForm(FlaskForm):
     title = TextAreaField("Post Title", validators=[DataRequired()])
-	content = TextAreaField("Post Desc", validators = [DataRequired()])
+    content = TextAreaField("Post Desc", validators = [DataRequired()])
     post_image = TextAreaField("Post Image", validators = [DataRequired()])
 
 class CommentForm(FlaskForm):
-
+    post_comment = TextAreaField("Post Comment", validators=[DataRequired()])
 

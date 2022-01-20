@@ -1,83 +1,44 @@
-from flask import Flask
-
-from flask import (Flask, g, render_template, flash, redirect, url_for,abort)
-from flask_bcrypt import check_password_hash
-from flask_login import (LoginManager, login_user, logout_user,
-							login_required, current_user)
-
+from flask import Flask, jsonify
+from flask_login import (login_user, logout_user,
+                     login_required)
 import models
 import forms
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.debug = True
-app.secret_key = ''
-"""here secret_key is a random string of alphanumerics"""
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/socialmedia'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+db = SQLAlchemy(app)
+CORS(app)
 
-def validation_errors_to_error_messages(validation_errors):
-    """
-    Simple function that turns the WTForms validation errors into a simple list
-    """
-    errorMessages = []
-    for field in validation_errors:
-        for error in validation_errors[field]:
-            errorMessages.append(f'{field} : {error}')
-    return errorMessages
+db = SQLAlchemy(app)
+CORS(app)
 
-@app.before_request
-def before_request():
-	"""Connect to database before each request
-		g is a global object, passed around all time in flask, used to setup things which
-		we wanna have available everywhere.
-	"""
-    client = pymongo.MongoClient("")
-    g.db = client['DBSDatabase']
-	g.db.connect()
-	g.user = current_user
-
-@app.after_request
-def after_request(response):
-	"""close all database connection after each request"""
-	g.db.close()
-	return response
+# @auth_routes.route('/signup', methods=['POST'])
+# def sign_up():
+#     #Creates a new user and logs them in
+# 	form = forms.SignUpForm()
+# 	if form.validate_on_submit():
+#         user = models.User(
+#             username=form.data['username'],
+#             email=form.data['email'],
+#             password=form.data['password']
+#         )
+#         db.session.add(user)
+#         db.session.commit()
+#         login_user(user)
+#         return user.to_dict()
+# 	return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
 
-@auth_routes.route('/')
-def authenticate():
-    """
-    Authenticates a user.
-    """
-    if current_user.is_authenticated:
-        return current_user.to_dict()
-    return {'errors': ['Unauthorized']}
-
-
-
-@auth_routes.route('/signup', methods=['POST'])
-def sign_up():
-    #Creates a new user and logs them in
-	form = forms.SignUpForm()
-	if form.validate_on_submit():
-        user = models.User(
-            username=form.data['username'],
-            email=form.data['email'],
-            password=form.data['password']
-        )
-        db.session.add(user)
-        db.session.commit()
-        login_user(user)
-        return user.to_dict()
-	return {'errors': validation_errors_to_error_messages(form.errors)}, 401
-
-
-@app.route('/login', methods = ('GET', 'POST'))
+@app.route('/login', methods = ['GET'])
 def login():
 	form = forms.LoginForm()
 	if form.validate_on_submit():
-		user = models.User.query.filter(User.email == form.data['email']).first()
+		user = models.User.query.filter(models.User.email == form.data['email']).first()
 		login_user(user)
 		return user.to_dict()
 	return {'errors': validation_errors_to_error_messages(form.errors)}, 401
@@ -89,36 +50,72 @@ def logout():
 	logout_user()
 	return {'message': 'User logged out'}
 
-@auth_routes.route('/unauthorized')
-def unauthorized():
-    """
-    Returns unauthorized JSON when flask-login authentication fails
-    """
-    return {'errors': ['Unauthorized']}, 401
 
 
-@app.route('/new_post', methods = 'POST')
+@app.route('/new_post', methods = ['POST'])
 @login_required
 def post():
-	form = forms.PostForm()
-	if form.validate_on_submit():
+    form = forms.PostForm()
+    if form.validate_on_submit():
 
         post = models.Post(
         post_title=form.data['Post Title'],
         post_description=form.data['Post Desc'],
         post_image = form.data['post_image'],
-        user_id= g.user.id
+        user_id= form.data['user_id']
         )
+
+    try: 
         db.session.add(post)
         db.session.commit()
+    except: 
+        return False
 
-		return post.json()
+    return True
 
+@app.route('/posts', methods=['GET'])
+@login_required
+def get_all_posts(): 
+    return jsonify({"posts": [models.Post.json() for post in models.Post.query.all()]})
+
+@app.route('/posts/<string:user_id>', methods=['GET'])
+@login_required
+def get_user_posts(user_id): 
+    return jsonify({"user posts": [models.Post.json() for post in models.Post.query.filter_by(user_id=models.User.user_id)]})
+
+@app.route('/posts/update/<string:post_id>', methods=['POST'])
+@login_required
+def update_post(post_id):
+    post = models.Post.query.filter_by(post_id=post_id).first()
+    if post:
+        data = request.get_json()
+        models.Post.post_id = data["post_id"]
+        models.Post.post_title = data["post_title"]
+        models.Post.post_description = data["post_description"]
+        models.Post.post_image = data["post_image"]
+        models.Post.user_id = data["user_id"]
+    try:
+        db.session.commit()
+    except:
+        return jsonify({"message": "Error updating post"}), 500
+    return jsonify(post.json(), 201)
+
+@app.route('/posts/update/<string:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = models.Post.query.filter_by(post_id=post_id).first()
+    if post:
+        try:
+            db.session.delete(post)
+            db.session.commit()
+        except:
+            return jsonify({"message": "Error deleting post"}), 500
+    return 201
 
 
 @app.route('/', methods=['GET'])
 def get_all_users():
-    return jsonify({"users": [user.json() for user in User.query.all()]})
+    return jsonify({"users": [models.User.json() for user in models.User.query.all()]})
 
 
 if __name__ == '__main__':
