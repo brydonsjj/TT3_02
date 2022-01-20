@@ -22,7 +22,7 @@ const Post = ({ post }) => {
                         <CardMedia image={post.Post_image} component="video" alt="Video" /> :
                         <CardMedia image={post.Post_image} component="img" alt="Image" />
                     }
-                </CardContent>
+                </CardContent> 
                 <CardActions>
                     <Button size="medium">Edit</Button>
                     <Button size="medium" variant="contained">Delete</Button>
