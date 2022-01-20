@@ -2,7 +2,7 @@ import React from 'react';
 import './login.css';
 import { TextField, Button, Box, Grid, Card, CardContent, Typography } from '@mui/material';
 
-const Login = () => {
+const Login = (props) => {
     return (
         <Grid container alignItems="stretch" justifyContent="center">
             <Grid item xs={12} md={6} xs={{ p: 1 }}>
@@ -28,7 +28,7 @@ const Login = () => {
                                 />
                             </Grid>
                             <Grid item>
-                                <Button color="primary" size="large" variant="contained">
+                                <Button color="primary" size="large" variant="contained" type="submit" onClick={props.onLogin}>
                                     Log in
                                 </Button>
                             </Grid>

@@ -17,10 +17,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -108,7 +108,7 @@ const Layout = () => {
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <Grid container>
-            <Grid item xs={1}>
+            <Grid item xs={0.5}>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -122,15 +122,15 @@ const Layout = () => {
                 <MenuIcon />
               </IconButton>
             </Grid>
-            <Grid item xs={10}>
-              <Typography variant="h6" noWrap component="div">
+            <Grid item xs={10.5}>
+              <Typography variant="h4" noWrap component="div">
                 TechTrek3
               </Typography>
             </Grid>
             <Grid item xs ={1}>
               <Grid container justifyContent="flex-end">
                 <Button
-                    sx={{width: "100%", color: 'white', display: 'block' }}
+                    sx={{width: "100%", color: 'white', display: 'block' , size: 'large'}}
                     onClick={() => {
                       navigate("/login");
                     }}
