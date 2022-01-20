@@ -11,9 +11,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #E5E5E5;
+    background-color: #F5F7FB;
 }
-
+ 
 .form {
     width: fit-content;
     height: auto;

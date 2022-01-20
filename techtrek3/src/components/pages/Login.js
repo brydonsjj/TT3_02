@@ -1,38 +1,42 @@
 import React from 'react';
 import './login.css';
-import { TextField, Button} from '@mui/material';
+import { TextField, Button, Box, Grid, Card, CardContent, Typography } from '@mui/material';
 
 const Login = () => {
     return (
-        <div className="loginPage">
-            <h3 className="title">Welcome To TechTrek3</h3>
-            <div className="form">
-                <div></div>
-                <div className="formInput">
-                    <TextField
-                        required
-                        id="standard-required"
-                        label="Username"
-                        defaultValue=""
-                        variant="standard"
-                    />
-                </div>
-                <div className="formInput">
-                    <TextField
-                        required
-                        id="standard-required"
-                        label="Password"
-                        defaultValue=""
-                        variant="standard"
-                    />
-                </div>
-                <div>
-                    <Button type="button" variant="contained" className="form__custom-button">
-                        Log in
-                    </Button>
-                </div>
-            </div>
-        </div>
+        <Grid container alignItems="stretch" justifyContent="center">
+            <Grid item xs={12} md={6} xs={{ p: 1 }}>
+                <Card raised sx={{ mt: 8, p: 4 }}>
+                    <CardContent>
+                        <Typography align="center" variant="h3">Welcome to Techtrek3!</Typography>
+                        <Grid container direction={"column"} spacing={2} mt={2} alignItems="center" justifyContent="center">
+                            <Grid item>
+                                <TextField
+                                    required
+                                    id="standard-required"
+                                    label="Username"
+                                    defaultValue=""
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    required
+                                    id="standard-required"
+                                    label="Password"
+                                    defaultValue=""
+                                    xs={{ mt: 2 }}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button color="primary" size="large" variant="contained">
+                                    Log in
+                                </Button>
+                            </Grid>
+                        </Grid>  
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
     );
 };
 
