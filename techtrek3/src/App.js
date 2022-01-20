@@ -1,9 +1,9 @@
 import React from 'react';
-import MiniDrawer from "./components/navbar";
+import Navbar from './Components/Navbar'
 
 const App = () => {
   return (
-      <MiniDrawer></MiniDrawer>
+      <Navbar />
   );
 };
 
